@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { benefits } from "@/data/benefits";
-import { Clock, LightningBolt, Whatsapp, Globe } from "lucide-react";
+import { Clock, Zap, MessageSquare, Globe } from "lucide-react";
 
 const BenefitsSection = () => {
   // Function to render the appropriate icon
@@ -11,9 +11,9 @@ const BenefitsSection = () => {
       case 'clock':
         return <Clock className="h-10 w-10 text-primary" />;
       case 'lightning-bolt':
-        return <LightningBolt className="h-10 w-10 text-primary" />;
+        return <Zap className="h-10 w-10 text-primary" />;
       case 'whatsapp':
-        return <Whatsapp className="h-10 w-10 text-primary" />;
+        return <MessageSquare className="h-10 w-10 text-primary" />;
       case 'globe':
         return <Globe className="h-10 w-10 text-primary" />;
       default:
