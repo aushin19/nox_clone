@@ -73,7 +73,7 @@
     background-size: 20px 20px;
   }
   
-  /* New styles for the updated hero section */
+  /* Hero section styles */
   .hero-background {
     background: radial-gradient(circle at center, rgba(203, 4, 4, 0.15) 0%, transparent 70%);
   }
@@ -84,5 +84,22 @@
   
   .sparkle {
     @apply absolute text-primary text-2xl animate-pulse;
+  }
+  
+  /* Testimonial and FAQ section styles */
+  .testimonial-card {
+    @apply bg-secondary/30 backdrop-blur-sm border border-white/5 transition-all duration-300;
+  }
+  
+  .testimonial-card:hover {
+    @apply border-primary/30 shadow-lg shadow-primary/10;
+  }
+  
+  .faq-item {
+    @apply border border-white/10 bg-secondary/30 backdrop-blur-sm rounded-xl px-6;
+  }
+  
+  .faq-item[data-state="open"] {
+    @apply border-primary/30;
   }
 }

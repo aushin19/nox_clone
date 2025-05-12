@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Star, StarHalf } from 'lucide-react';
+import { Star } from 'lucide-react';
 
 interface TestimonialRatingProps {
   rating: number;
@@ -8,23 +8,13 @@ interface TestimonialRatingProps {
 }
 
 const TestimonialRating = ({ rating, className = "" }: TestimonialRatingProps) => {
-  const fullStars = Math.floor(rating);
-  const hasHalfStar = rating % 1 !== 0;
-  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-  
   return (
     <div className={`flex items-center ${className}`}>
-      {/* Full stars */}
-      {Array.from({ length: fullStars }).map((_, i) => (
-        <Star key={`full-${i}`} className="h-5 w-5 fill-primary text-primary" />
-      ))}
-      
-      {/* Half star */}
-      {hasHalfStar && <StarHalf className="h-5 w-5 fill-primary text-primary" />}
-      
-      {/* Empty stars */}
-      {Array.from({ length: emptyStars }).map((_, i) => (
-        <Star key={`empty-${i}`} className="h-5 w-5 text-muted" />
+      {[1, 2, 3, 4, 5].map((star) => (
+        <Star 
+          key={star} 
+          className={`h-4 w-4 ${star <= rating ? "fill-primary text-primary" : "text-muted"}`}
+        />
       ))}
     </div>
   );
