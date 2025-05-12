@@ -9,6 +9,7 @@ import PricingSection from '@/components/PricingSection';
 import FaqSection from '@/components/FaqSection';
 import UpdatesSection from '@/components/UpdatesSection';
 import BenefitsSection from '@/components/BenefitsSection';
+import TestimonialSection from '@/components/TestimonialSection';
 import NotificationBanner from '@/components/NotificationBanner';
 import AuthModals from '@/components/AuthModals';
 
@@ -26,6 +27,7 @@ const Index = () => {
       <main className="flex-1">
         <HeroSection />
         <ToolShowcase />
+        <TestimonialSection />
         <TourSection />
         <PricingSection />
         <FaqSection />
