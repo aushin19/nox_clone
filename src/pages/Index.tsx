@@ -19,17 +19,17 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <NotificationBanner message="Big news, we reduced our fees" linkText="Learn More" linkUrl="#pricing" />
+      {/* <NotificationBanner message="Big news, we reduced our fees" linkText="Learn More" linkUrl="#pricing" /> */}
       <Navbar 
         onLoginClick={() => setIsLoginOpen(true)}
         onRegisterClick={() => setIsSignupOpen(true)}
       />
       <main className="flex-1">
         <HeroSection />
-        <ToolShowcase />
-        <BenefitsSection />
-        <TourSection />
         <TestimonialSection />
+        {/* <ToolShowcase /> */}
+        <TourSection />
+        <BenefitsSection />
         <PricingSection />
         <FaqSection />
         <UpdatesSection />

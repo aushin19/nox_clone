@@ -21,7 +21,7 @@ const AuthModals = ({
     <>
       <Dialog open={isLoginOpen} onOpenChange={onLoginClose}>
         <DialogContent className="sm:max-w-md p-0 bg-transparent border-none shadow-none">
-          <LoginForm />
+          <LoginForm onLoginSuccess={onLoginClose} />
         </DialogContent>
       </Dialog>
       

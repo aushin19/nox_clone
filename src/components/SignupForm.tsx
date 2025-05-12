@@ -1,11 +1,13 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -20,6 +22,8 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const SignupForm = () => {
+  const [error, setError] = useState(null);
+  const { toast } = useToast();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,10 +35,26 @@ const SignupForm = () => {
   });
 
   const onSubmit = (data: FormValues) => {
-    console.log(data);
-    // Handle signup logic here
+    handleSignup(data);
   };
 
+  const handleSignup = async (data: FormValues) => {
+    try{
+      const response = await axios.post("http://localhost:3000/users/register", data);
+      setError(null);
+      toast({
+        title: "Account created successfully",
+        description: "Please login to continue",
+      });
+    } catch (error) {
+      setError(error.response.data.message);
+      toast({
+        title: "Error",
+        description: error.response.data.message,
+        variant: "destructive",
+      });
+    }
+  };
   return (
     <div className="w-full max-w-md mx-auto p-6 glass-card rounded-xl">
       <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>

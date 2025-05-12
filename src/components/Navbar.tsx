@@ -22,7 +22,7 @@ const Navbar = ({ onLoginClick, onRegisterClick }: NavbarProps) => {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
           <a href="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-gradient">OneTools.io</span>
+            <span className="text-2xl font-bold text-primary">OneTools.io</span>
           </a>
           
           <nav className="hidden md:flex items-center gap-6">

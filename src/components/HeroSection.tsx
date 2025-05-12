@@ -8,10 +8,6 @@ const HeroSection = () => {
       {/* Background elements */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5 z-0"></div>
       
-      {/* Purple stars/sparkles */}
-      <div className="absolute left-64 top-40 text-primary text-4xl opacity-70">✦</div>
-      <div className="absolute right-64 bottom-40 text-primary text-4xl opacity-70">✦</div>
-      
       <div className="container relative z-10 max-w-6xl mx-auto px-4">
         <div className="text-center space-y-6">
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-4">
@@ -31,13 +27,6 @@ const HeroSection = () => {
             >
               Get Started Now
             </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="text-lg px-8 py-6 rounded-full border-white/10 bg-white/5 hover:bg-white/10"
-            >
-              Try Tutorial Now
-            </Button>
           </div>
         </div>
       </div>
@@ -51,7 +40,7 @@ const HeroSection = () => {
       {/* Backed by companies section */}
       <div className="container relative z-10 mt-24">
         <div className="text-center mb-10">
-          <h3 className="text-2xl font-bold">Backed by 200+ Growing Businesses</h3>
+          <h3 className="text-2xl font-bold">Trusted by 2000+ Customers</h3>
         </div>
         
         <div className="flex flex-wrap justify-center items-center gap-12">

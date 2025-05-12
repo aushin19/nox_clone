@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,6 +6,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -15,7 +16,12 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const LoginForm = () => {
+interface LoginFormProps {
+  onLoginSuccess?: () => void;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
+  const { toast } = useToast();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -26,7 +32,24 @@ const LoginForm = () => {
 
   const onSubmit = (data: FormValues) => {
     console.log(data);
-    // Handle login logic here
+    handleLogin(data);
+  };
+
+  const handleLogin = async (data: FormValues) => {
+    try{
+      const response = await axios.post("http://localhost:3000/users/login", data);
+      toast({
+        title: "Login successful",
+        description: "You have been logged in successfully",
+      });
+      onLoginSuccess();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error.response.data.message,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
