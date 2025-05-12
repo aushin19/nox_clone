@@ -3,6 +3,7 @@ import React from 'react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 const Subscription = () => {
   // Mock subscription data - in a real app, you'd fetch this from an API
