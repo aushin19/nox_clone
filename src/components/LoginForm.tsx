@@ -1,13 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -21,7 +21,11 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -30,25 +34,26 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
     },
   });
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
-    handleLogin(data);
-  };
-
-  const handleLogin = async (data: FormValues) => {
-    try{
-      const response = await axios.post("http://localhost:3000/users/login", data);
+  const onSubmit = async (data: FormValues) => {
+    setIsLoading(true);
+    try {
+      await login(data.email, data.password);
+      
+      if (onLoginSuccess) {
+        onLoginSuccess();
+      }
+      
+      // Redirect to dashboard after successful login
+      navigate('/dashboard');
+    } catch (err: any) {
+      console.error("Login failed:", err);
       toast({
-        title: "Login successful",
-        description: "You have been logged in successfully",
-      });
-      onLoginSuccess();
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: error.response.data.message,
+        title: "Login Error",
+        description: err.message || "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -64,7 +69,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="name@example.com" {...field} />
+                  <Input type="email" placeholder="name@example.com" {...field} disabled={isLoading} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -77,7 +82,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="••••••••" {...field} />
+                  <Input type="password" placeholder="••••••••" {...field} disabled={isLoading} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -90,8 +95,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
               </a>
             </div>
           </div>
-          <Button type="submit" className="w-full">
-            Log In
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Logging in..." : "Log In"}
           </Button>
           <div className="text-center mt-4 text-sm">
             <span className="text-muted-foreground">Don't have an account?</span>{" "}

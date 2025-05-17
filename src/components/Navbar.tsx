@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { 
@@ -30,45 +29,20 @@ const Navbar = ({ onLoginClick, onRegisterClick }: NavbarProps) => {
               Home
             </a>
             
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Products
-                <ChevronDown className="ml-1 h-4 w-4" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <a href="#tools">AI & Content Writing</a>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <a href="#tools">Asset Platforms</a>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <a href="#tools">Graphic & Video Creation</a>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Features
-                <ChevronDown className="ml-1 h-4 w-4" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <a href="#tour">Product Tour</a>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <a href="#pricing">Pricing</a>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <a href="#tools" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Tools
+            </a>
             
             <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Pricing
             </a>
             
             <a href="#faq" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Resources
+              FAQ
+            </a>
+            
+            <a href="/support" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Support
             </a>
           </nav>
         </div>
@@ -103,10 +77,10 @@ const Navbar = ({ onLoginClick, onRegisterClick }: NavbarProps) => {
         <div className="md:hidden border-t border-secondary/60 bg-background/95 backdrop-blur-sm">
           <div className="container py-3 space-y-3">
             <a href="/" className="block py-2 text-sm font-medium">Home</a>
-            <a href="#tools" className="block py-2 text-sm font-medium">Products</a>
-            <a href="#tour" className="block py-2 text-sm font-medium">Features</a>
+            <a href="#tools" className="block py-2 text-sm font-medium">Tools</a>
             <a href="#pricing" className="block py-2 text-sm font-medium">Pricing</a>
-            <a href="#faq" className="block py-2 text-sm font-medium">Resources</a>
+            <a href="#faq" className="block py-2 text-sm font-medium">FAQ</a>
+            <a href="/support" className="block py-2 text-sm font-medium">Support</a>
             <div className="flex gap-2 pt-2">
               <Button variant="outline" className="w-1/2" onClick={onLoginClick}>Log in</Button>
               <Button className="w-1/2" onClick={onRegisterClick}>Register</Button>

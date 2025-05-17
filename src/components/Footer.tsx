@@ -43,20 +43,9 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-secondary/60 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-secondary/60 pt-6 flex flex-col md:flex-row justify-center items-center gap-4">
           <div className="text-sm text-muted-foreground">
             © 2025 OneTools.io. All rights reserved.
-          </div>
-
-          <div className="flex h-6 overflow-hidden">
-            <div className="flex flex-col animate-text-slide">
-              <span className="flex items-center h-6">Loved by 2000+ #ContentCreators 🇺🇸</span>
-              <span className="flex items-center h-6">Loved by 2000+ #Designers 🇬🇧</span>
-              <span className="flex items-center h-6">Loved by 2000+ #Marketers 🇨🇦</span>
-              <span className="flex items-center h-6">Loved by 2000+ #Students 🇦🇺</span>
-              <span className="flex items-center h-6">Loved by 2000+ #Freelancers 🇮🇳</span>
-              <span className="flex items-center h-6">Loved by 2000+ #Professionals 🇩🇪</span>
-            </div>
           </div>
         </div>
       </div>

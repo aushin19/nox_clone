@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,11 +5,15 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/hooks/useAuth"; // Use the auth hook instead of direct API service
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
+  username: z.string()
+    .min(3, { message: "Username must be at least 3 characters." })
+    .max(20, { message: "Username cannot be longer than 20 characters." })
+    .regex(/^[a-zA-Z0-9_]+$/, { message: "Username can only contain letters, numbers, and underscores." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
   password: z.string().min(8, { message: "Password must be at least 8 characters." }),
   confirmPassword: z.string().min(8, { message: "Password must be at least 8 characters." }),
@@ -21,40 +24,74 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const SignupForm = () => {
-  const [error, setError] = useState(null);
+interface SignupFormProps {
+  onSignupSuccess?: () => void;
+}
+
+const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { register } = useAuth(); // Use the register function from the auth hook
+  
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      username: "",
       email: "",
       password: "",
       confirmPassword: "",
     },
   });
 
-  const onSubmit = (data: FormValues) => {
-    handleSignup(data);
-  };
-
-  const handleSignup = async (data: FormValues) => {
-    try{
-      const response = await axios.post("http://localhost:3000/users/register", data);
-      setError(null);
+  const onSubmit = async (data: FormValues) => {
+    setIsLoading(true);
+    try {
+      // Clean username - ensure it follows rules
+      const cleanUsername = data.username.trim().toLowerCase();
+      
+      // Use the auth hook's register function
+      await register(
+        data.name,
+        data.email,
+        data.password,
+        cleanUsername
+      );
+      
+      if (onSignupSuccess) {
+        onSignupSuccess();
+      }
+    } catch (err: any) {
+      console.error("Signup failed:", err);
+      
+      // Provide a more specific error message for common failures
+      let errorMessage = err.message || "An unexpected error occurred. Please try again.";
+      
+      if (err.message.includes("already")) {
+        // Username or email already exists
+        errorMessage = "This username or email is already taken. Please try another one.";
+        
+        // Reset the username and email fields
+        form.setValue("username", "");
+        form.setFocus("username");
+      } else if (err.message.includes("password")) {
+        // Password requirements not met
+        errorMessage = "Password doesn't meet the requirements. Please use at least 8 characters.";
+        form.setValue("password", "");
+        form.setValue("confirmPassword", "");
+        form.setFocus("password");
+      }
+      
       toast({
-        title: "Account created successfully",
-        description: "Please login to continue",
-      });
-    } catch (error) {
-      setError(error.response.data.message);
-      toast({
-        title: "Error",
-        description: error.response.data.message,
+        title: "Sign Up Error",
+        description: errorMessage,
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
+  
   return (
     <div className="w-full max-w-md mx-auto p-6 glass-card rounded-xl">
       <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
@@ -67,7 +104,29 @@ const SignupForm = () => {
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="John Doe" {...field} />
+                  <Input placeholder="John Doe" {...field} disabled={isLoading} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="johndoe123" 
+                    {...field} 
+                    disabled={isLoading}
+                    onChange={(e) => {
+                      // Only allow valid username characters
+                      const validUsername = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
+                      field.onChange(validUsername);
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -80,7 +139,7 @@ const SignupForm = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="name@example.com" {...field} />
+                  <Input type="email" placeholder="name@example.com" {...field} disabled={isLoading} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -93,7 +152,7 @@ const SignupForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="••••••••" {...field} />
+                  <Input type="password" placeholder="••••••••" {...field} disabled={isLoading} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -106,14 +165,14 @@ const SignupForm = () => {
               <FormItem>
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="••••••••" {...field} />
+                  <Input type="password" placeholder="••••••••" {...field} disabled={isLoading} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
-            Sign Up
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Signing up..." : "Sign Up"}
           </Button>
           <div className="text-center mt-4 text-sm">
             <span className="text-muted-foreground">Already have an account?</span>{" "}

@@ -1,12 +1,19 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
 import { pricingPlans, features } from "@/data/pricing";
+import AuthModals from "@/components/AuthModals";
 
 const PricingSection = () => {
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+
+  const handleGetMembership = () => {
+    setIsSignupOpen(true);
+  };
+
   return (
     <section id="pricing" className="py-16">
       <div className="container">
@@ -53,7 +60,11 @@ const PricingSection = () => {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button className="w-full" variant={plan.badge === "Most Popular" ? "default" : "outline"}>
+                <Button 
+                  className="w-full" 
+                  variant={plan.badge === "Most Popular" ? "default" : "outline"}
+                  onClick={handleGetMembership}
+                >
                   Get Membership
                 </Button>
               </CardFooter>
@@ -61,6 +72,13 @@ const PricingSection = () => {
           ))}
         </div>
       </div>
+
+      <AuthModals 
+        isSignupOpen={isSignupOpen}
+        isLoginOpen={isLoginOpen}
+        onSignupClose={() => setIsSignupOpen(false)}
+        onLoginClose={() => setIsLoginOpen(false)}
+      />
     </section>
   );
 };

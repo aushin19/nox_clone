@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -27,7 +26,7 @@ const Index = () => {
       <main className="flex-1">
         <HeroSection />
         <TestimonialSection />
-        {/* <ToolShowcase /> */}
+        <ToolShowcase />
         <TourSection />
         <BenefitsSection />
         <PricingSection />
@@ -40,7 +39,10 @@ const Index = () => {
         isLoginOpen={isLoginOpen}
         isSignupOpen={isSignupOpen}
         onLoginClose={() => setIsLoginOpen(false)}
-        onSignupClose={() => setIsSignupOpen(false)}
+        onSignupClose={() => {
+          setIsSignupOpen(false);
+          setIsLoginOpen(true);
+        }}
       />
     </div>
   );

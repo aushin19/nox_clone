@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import LoginForm from './LoginForm';
@@ -27,7 +26,7 @@ const AuthModals = ({
       
       <Dialog open={isSignupOpen} onOpenChange={onSignupClose}>
         <DialogContent className="sm:max-w-md p-0 bg-transparent border-none shadow-none">
-          <SignupForm />
+          <SignupForm onSignupSuccess={onSignupClose} />
         </DialogContent>
       </Dialog>
     </>
