@@ -1,7 +1,11 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
+  const { isAuthenticated } = useAuth();
+
   return (
     <section className="relative pt-24 pb-32 overflow-hidden">
       {/* Background elements */}
@@ -20,14 +24,25 @@ const HeroSection = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#pricing">
-              <Button 
-                size="lg" 
-                className="text-lg px-8 py-6 rounded-full bg-primary text-white hover:bg-primary/90"
-              >
-                Get Started Now
-              </Button>
-            </a>
+            {isAuthenticated ? (
+              <Link to="/dashboard">
+                <Button 
+                  size="lg" 
+                  className="text-lg px-8 py-6 rounded-full bg-primary text-white hover:bg-primary/90"
+                >
+                  Go to Dashboard
+                </Button>
+              </Link>
+            ) : (
+              <a href="#pricing">
+                <Button 
+                  size="lg" 
+                  className="text-lg px-8 py-6 rounded-full bg-primary text-white hover:bg-primary/90"
+                >
+                  Get Started Now
+                </Button>
+              </a>
+            )}
           </div>
         </div>
       </div>

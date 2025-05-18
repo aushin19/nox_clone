@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -9,25 +8,71 @@ import {
   HelpCircle,
   Info,
   Megaphone,
-  Wrench
+  Wrench,
+  Zap,
+  LineChart,
+  Users,
+  Palette,
+  Code,
+  Terminal,
+  Lock,
+  ChevronRight
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface QuickAccessButtonProps {
   icon: React.ElementType;
   title: string;
   link: string;
   color?: string;
+  iconColor?: string;
+  bgColor?: string;
+  isPro?: boolean;
 }
 
-const QuickAccessButton = ({ icon: Icon, title, link, color = "bg-primary/20" }: QuickAccessButtonProps) => {
+const QuickAccessButton = ({ 
+  icon: Icon, 
+  title, 
+  link, 
+  color = "from-blue-500/20 to-blue-600/20", 
+  iconColor = "text-blue-500",
+  bgColor = "bg-blue-500/5",
+  isPro = false 
+}: QuickAccessButtonProps) => {
   return (
     <Link to={link}>
-      <Card className="h-full p-5 flex flex-col items-center justify-center transition-all hover:scale-105 hover:shadow-md hover:shadow-primary/20 glass-card border-secondary/60">
-        <div className={`p-4 rounded-md mb-3 ${color}`}>
-          <Icon className="h-6 w-6 text-primary" />
+      <Card className="relative h-full p-5 flex flex-col justify-between transition-all duration-300 hover:shadow-md hover:translate-y-[-2px] border border-secondary/20 overflow-hidden group rounded-xl">
+        <div className="flex flex-col">
+          <div className={cn(
+            "p-3 mb-4 rounded-lg w-12 h-12 flex items-center justify-center", 
+            bgColor
+          )}>
+            <Icon className={cn("h-6 w-6 transition-transform group-hover:scale-110", iconColor)} />
+          </div>
+          
+          <h3 className="text-base font-semibold mb-1 line-clamp-1">{title}</h3>
+          <div className="text-xs text-muted-foreground mb-3">
+            Click to access
+          </div>
         </div>
-        <h3 className="text-sm font-medium text-center">{title}</h3>
+        
+        <div className="flex items-center justify-between">
+          <div className={cn(
+            "h-1.5 w-12 rounded-full opacity-70",
+            `bg-gradient-to-r ${color}`
+          )} />
+          
+          <div className="text-muted-foreground rounded-full p-1 group-hover:bg-secondary/20 group-hover:text-foreground transition-colors">
+            <ChevronRight className="h-4 w-4" />
+          </div>
+        </div>
+        
+        {isPro && (
+          <div className="absolute top-3 right-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md">
+            PRO
+          </div>
+        )}
       </Card>
     </Link>
   );
@@ -35,18 +80,77 @@ const QuickAccessButton = ({ icon: Icon, title, link, color = "bg-primary/20" }:
 
 const QuickAccessGrid = () => {
   const quickAccessItems = [
-    { icon: Building, title: 'Tools Library', link: '/dashboard/tools', color: 'bg-blue-500/20' },
-    { icon: Settings, title: 'My Subscription', link: '/dashboard/subscription', color: 'bg-purple-500/20' },
-    { icon: User, title: 'Account', link: '/dashboard/account', color: 'bg-green-500/20' },
-    { icon: Download, title: 'Download Extension', link: '/dashboard/extension', color: 'bg-yellow-500/20' },
-    { icon: HelpCircle, title: 'Support', link: '/dashboard/support', color: 'bg-red-500/20' },
-    { icon: Megaphone, title: 'Announcements', link: '/dashboard/announcements', color: 'bg-indigo-500/20' },
-    { icon: Info, title: 'FAQs', link: '/dashboard/faqs', color: 'bg-pink-500/20' },
-    { icon: Wrench, title: 'Fix a Tool', link: '/dashboard/fix-tool', color: 'bg-orange-500/20' },
+    { 
+      icon: Building, 
+      title: 'Tools Library', 
+      link: '/dashboard/tools', 
+      color: 'from-blue-500/20 to-blue-600/20',
+      iconColor: 'text-blue-500',
+      bgColor: 'bg-blue-500/5'
+    },
+    { 
+      icon: Palette, 
+      title: 'Image Generator', 
+      link: '/dashboard/image-generator', 
+      color: 'from-purple-500/20 to-purple-600/20',
+      iconColor: 'text-purple-500',
+      bgColor: 'bg-purple-500/5',
+      isPro: true 
+    },
+    { 
+      icon: Code, 
+      title: 'Code Assistant', 
+      link: '/dashboard/code-assistant', 
+      color: 'from-green-500/20 to-green-600/20',
+      iconColor: 'text-green-500',
+      bgColor: 'bg-green-500/5',
+      isPro: true 
+    },
+    { 
+      icon: Lock, 
+      title: 'Password Manager', 
+      link: '/dashboard/password-manager', 
+      color: 'from-yellow-500/20 to-amber-600/20',
+      iconColor: 'text-amber-500',
+      bgColor: 'bg-amber-500/5' 
+    },
+    { 
+      icon: HelpCircle, 
+      title: 'Support Center', 
+      link: '/dashboard/support', 
+      color: 'from-red-500/20 to-red-600/20',
+      iconColor: 'text-red-500',
+      bgColor: 'bg-red-500/5' 
+    },
+    { 
+      icon: Terminal, 
+      title: 'Command Center', 
+      link: '/dashboard/command-center', 
+      color: 'from-indigo-500/20 to-indigo-600/20',
+      iconColor: 'text-indigo-500',
+      bgColor: 'bg-indigo-500/5',
+      isPro: true 
+    },
+    { 
+      icon: Users, 
+      title: 'Team Management', 
+      link: '/dashboard/team', 
+      color: 'from-pink-500/20 to-pink-600/20',
+      iconColor: 'text-pink-500',
+      bgColor: 'bg-pink-500/5' 
+    },
+    { 
+      icon: Wrench, 
+      title: 'Fix a Tool', 
+      link: '/dashboard/fix-tool', 
+      color: 'from-orange-500/20 to-orange-600/20',
+      iconColor: 'text-orange-500',
+      bgColor: 'bg-orange-500/5'
+    },
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {quickAccessItems.map((item) => (
         <QuickAccessButton
           key={item.title}
@@ -54,6 +158,9 @@ const QuickAccessGrid = () => {
           title={item.title}
           link={item.link}
           color={item.color}
+          iconColor={item.iconColor}
+          bgColor={item.bgColor}
+          isPro={item.isPro}
         />
       ))}
     </div>

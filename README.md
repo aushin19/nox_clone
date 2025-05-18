@@ -1,73 +1,215 @@
-# Welcome to your Lovable project
+# NoxTools Frontend
 
-## Project info
+A modern web application built with React, TypeScript, Vite, and Supabase, featuring a comprehensive dashboard with tools, subscription management, and authentication.
 
-**URL**: https://lovable.dev/projects/65d936e4-406c-4787-b96c-233e83d546d0
+## Overview
 
-## How can I edit this code?
+NoxTools is a tool nexus hub that provides various developer tools and utilities in a unified platform. The frontend is built using React with TypeScript for type safety, Vite for fast development, and integrates with Supabase for authentication and database operations.
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+- **Authentication System**: Complete user authentication flow with sign-up, login, password reset, and email verification
+- **Dashboard Interface**: User-friendly dashboard with multiple sections
+- **Tools Library**: Access to various development tools
+- **Subscription Management**: Integrated payment system with Razorpay
+- **User Account Management**: Profile updating and management
+- **Responsive UI**: Modern interface built with Tailwind CSS and Shadcn UI components
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/65d936e4-406c-4787-b96c-233e83d546d0) and start prompting.
+## Tech Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Frontend Framework**: React 18
+- **Language**: TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS with Shadcn UI components
+- **Form Handling**: React Hook Form with Zod validation
+- **State Management**: React Query for server state
+- **Authentication**: Supabase Auth
+- **Database**: Supabase PostgreSQL
+- **Payment Processing**: Razorpay integration
 
-**Use your preferred IDE**
+## Recent UI Improvements
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+The application has undergone significant UI modernization to enhance user experience:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Core UI Redesign (Latest)
 
-Follow these steps:
+1. **Account Page**:
+   - Added user profile card with avatar at the top
+   - Implemented tabbed interface for Personal Info, Account Settings, and Security sections
+   - Created visually organized forms with proper spacing and grouping
+   - Added toggle switches for notification preferences and security options
+   - Improved session management with visual indicators for active sessions
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+2. **Support Page**:
+   - Added hero section with quick contact options
+   - Implemented categorized FAQ sections in a card-based layout
+   - Added live chat functionality with a modal interface
+   - Created a support ticket submission form with priority options
+   - Added statistics section showing support performance metrics
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+3. **FixTool Page**:
+   - Added a hero section explaining the tool fixing process
+   - Implemented a step-by-step form with progress tracking and visual indicators
+   - Added statistics cards for resolved issues and response times
+   - Created tabs for issue reporting and status tracking
+   - Implemented a modern UI for displaying past reports and recent fixes
+   - Added detailed issue submission flow with validation
 
-# Step 3: Install the necessary dependencies.
-npm i
+4. **Extension Page**:
+   - Created a modern browser extension download page
+   - Added browser-specific download cards with branded colors
+   - Implemented tabbed installation guides for different browsers
+   - Added feature showcase section highlighting extension capabilities
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+### Previous Improvements
+
+- Replaced old Navbar with new Header component
+- Fixed 404 errors by creating/updating missing components
+- Redesigned dashboard layout with improved header, search, and profile UI
+- Enhanced mobile navigation and responsiveness
+- Modernized Tools Library with improved category filtering and search
+- Redesigned Subscription page with tabbed interfaces and visual indicators
+
+## Project Structure
+
+```
+├── public/              # Static assets
+├── src/
+│   ├── api/             # API integration layers
+│   ├── components/      # Reusable UI components
+│   │   ├── auth/        # Authentication-related components
+│   │   ├── dashboard/   # Dashboard-specific components
+│   │   ├── subscription/# Subscription-related components
+│   │   ├── ui/          # UI component library (shadcn)
+│   │   └── user/        # User profile components
+│   ├── contexts/        # React context providers
+│   ├── data/            # Static data and constants
+│   ├── hooks/           # Custom React hooks
+│   ├── lib/             # Utility libraries
+│   ├── pages/           # Page components
+│   ├── services/        # Service layer for API interactions
+│   ├── types/           # TypeScript type definitions
+│   ├── App.tsx          # Main application component
+│   └── main.tsx         # Application entry point
+├── supabase/            # Supabase configuration and edge functions
+├── tailwind.config.ts   # Tailwind CSS configuration
+└── vite.config.ts       # Vite configuration
 ```
 
-**Edit a file directly in GitHub**
+## Getting Started
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Prerequisites
 
-**Use GitHub Codespaces**
+- Node.js (v18 or higher)
+- npm or yarn or bun
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Installation
 
-## What technologies are used for this project?
+1. Clone the repository
+   ```
+   git clone https://github.com/yourusername/noxtools_clone
+   cd noxtools_clone/frontend
+   ```
 
-This project is built with:
+2. Install dependencies
+   ```
+   npm install
+   # or
+   yarn install
+   # or
+   bun install
+   ```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+3. Set up environment variables
+   Create a `.env` file in the root directory with the following variables:
+   ```
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
 
-## How can I deploy this project?
+4. Start the development server
+   ```
+   npm run dev
+   # or
+   yarn dev
+   # or
+   bun dev
+   ```
 
-Simply open [Lovable](https://lovable.dev/projects/65d936e4-406c-4787-b96c-233e83d546d0) and click on Share -> Publish.
+## Development
 
-## Can I connect a custom domain to my Lovable project?
+### Available Scripts
 
-Yes, you can!
+- `npm run dev` - Start the development server
+- `npm run build` - Build the app for production
+- `npm run build:dev` - Build with development configuration
+- `npm run preview` - Preview the production build locally
+- `npm run lint` - Run ESLint to check for linting errors
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Key Features Implementation
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+#### Authentication
+
+The application uses Supabase for authentication with multiple methods:
+- Email/password authentication
+- OAuth providers
+- Password reset functionality
+- Email verification
+
+#### Subscription Management
+
+The application integrates with Razorpay for payment processing:
+- Subscription plans with different tiers
+- Payment processing
+- Subscription status tracking
+
+#### Dashboard
+
+The dashboard provides access to:
+- Tools library
+- Account settings
+- Subscription management
+- Support access
+- Browser extension information
+
+## Deployment
+
+To deploy the application:
+
+1. Build the project
+   ```
+   npm run build
+   ```
+
+2. Deploy the contents of the `dist` directory to your web hosting service
+
+## Database Schema
+
+The application uses the following Supabase tables:
+
+### Profiles Table
+- `id`: User ID (from Supabase Auth)
+- `username`: User's username
+- `email`: User's email
+- `first_name`: User's first name
+- `last_name`: User's last name
+- `plan_sku`: SKU of the user's subscription plan
+- `plan_name`: Name of the user's subscription plan
+- `plan_price`: Price of the subscription
+- `plan_status`: Status of the subscription (active, inactive, etc.)
+- `plan_start_date`: Start date of the subscription
+- `plan_end_date`: End date of the subscription
+- `created_at`: Timestamp of profile creation
+- `updated_at`: Timestamp of profile update
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details. 

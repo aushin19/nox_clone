@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -19,6 +18,9 @@ export default {
 			}
 		},
 		extend: {
+			maxWidth: {
+				container: "1280px",
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -68,6 +70,9 @@ export default {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
+			},
+			blur: {
+				xs: '2px'
 			},
 			keyframes: {
 				'accordion-down': {
@@ -125,6 +130,10 @@ export default {
 					'100%': {
 						transform: 'translateY(-83.33%)'
 					}
+				},
+				marquee: {
+					from: { transform: 'translateX(0)' },
+					to: { transform: 'translateX(calc(-100% - var(--gap)))' }
 				}
 			},
 			animation: {
@@ -132,7 +141,8 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.3s ease-out',
 				'fade-out': 'fade-out 0.3s ease-out',
-				'text-slide': 'text-slide 12s infinite'
+				'text-slide': 'text-slide 12s infinite',
+				'marquee': 'marquee var(--duration) linear infinite',
 			}
 		}
 	},

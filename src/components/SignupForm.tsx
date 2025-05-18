@@ -26,9 +26,10 @@ type FormValues = z.infer<typeof formSchema>;
 
 interface SignupFormProps {
   onSignupSuccess?: () => void;
+  onLoginClick?: () => void;
 }
 
-const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
+const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess, onLoginClick }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const { register } = useAuth(); // Use the register function from the auth hook
@@ -89,6 +90,12 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+  
+  const handleLoginClick = () => {
+    if (onLoginClick) {
+      onLoginClick();
     }
   };
   
@@ -176,9 +183,14 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
           </Button>
           <div className="text-center mt-4 text-sm">
             <span className="text-muted-foreground">Already have an account?</span>{" "}
-            <a href="#login" className="text-primary hover:underline">
+            <Button 
+              type="button" 
+              variant="link" 
+              className="p-0 h-auto text-primary" 
+              onClick={handleLoginClick}
+            >
               Log in
-            </a>
+            </Button>
           </div>
         </form>
       </Form>

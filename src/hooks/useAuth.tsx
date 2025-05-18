@@ -1,6 +1,15 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { Session, User } from '@supabase/supabase-js'
-import { supabase, signIn, signUp, signOut, getProfile } from '@/lib/supabase-client'
+import { Session, User, Provider } from '@supabase/supabase-js'
+import { 
+  supabase, 
+  signIn, 
+  signUp, 
+  signOut, 
+  signInWithProvider,
+  resetPassword,
+  updatePassword,
+  getProfile 
+} from '@/lib/supabase-client'
 import { Database } from '@/types/database.types'
 import { toast } from "sonner";
 
@@ -13,9 +22,13 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   hasSubscription: boolean;
+  emailVerified: boolean;
   login: (email: string, password: string) => Promise<void>;
+  loginWithProvider: (provider: Provider) => Promise<void>;
   register: (name: string, email: string, password: string, username: string) => Promise<void>;
   logout: () => Promise<void>;
+  sendPasswordResetEmail: (email: string) => Promise<void>;
+  changePassword: (newPassword: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -26,6 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasSubscription, setHasSubscription] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
 
   useEffect(() => {
     // Get initial session
@@ -33,14 +47,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       setIsLoading(false);
+      
+      // Check if email is verified
+      if (session?.user) {
+        setEmailVerified(session.user.email_confirmed_at !== null);
+      }
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         setIsLoading(false);
+        
+        // Check email verification status when auth state changes
+        if (session?.user) {
+          setEmailVerified(session.user.email_confirmed_at !== null);
+        } else {
+          setEmailVerified(false);
+        }
+        
+        // Handle specific auth events
+        if (event === 'PASSWORD_RECOVERY') {
+          // Redirect to password reset page if not already there
+          if (!window.location.pathname.includes('/reset-password')) {
+            window.location.href = '/auth/reset-password';
+          }
+        }
+        
+        if (event === 'SIGNED_IN') {
+          toast.success("Signed in successfully");
+        }
+        
+        if (event === 'SIGNED_OUT') {
+          toast.success("Signed out successfully");
+        }
       }
     );
 
@@ -63,9 +105,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         if (error) {
           console.error('Error loading profile:', error);
+          // Don't fail completely - still set up a minimal profile
+          setProfile(null);
+          setHasSubscription(false);
+          toast.error("Could not load user profile. Some features may be limited.");
           return;
         }
 
+        if (!profile) {
+          console.warn('No profile found for user');
+          // Create a minimal profile to avoid UI issues
+          setProfile({
+            id: user.id,
+            username: user.user_metadata?.username || user.email?.split('@')[0] || 'user_temp',
+            email: user.email || '',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          } as any);
+          setHasSubscription(false);
+          return;
+        }
+
+        console.log('Profile loaded successfully:', profile);
         setProfile(profile);
         
         // Check if user has an active subscription
@@ -77,8 +138,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setHasSubscription(hasActive);
       } catch (error) {
         console.error('Error in profile effect:', error);
-        setProfile(null);
+        // Don't crash - set up minimal profile
+        setProfile({
+          id: user.id,
+          username: user.user_metadata?.username || user.email?.split('@')[0] || 'user_temp',
+          email: user.email || '',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        } as any);
         setHasSubscription(false);
+        toast.error("Failed to load complete profile. Some features may be limited.");
       }
     }
 
@@ -96,10 +165,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       toast.success("Logged in successfully");
     } catch (error: any) {
-      toast.error(error.message || "Login failed");
+      let errorMessage = error.message || "Login failed";
+      
+      // Provide more user-friendly error messages
+      if (errorMessage.includes("Invalid login credentials")) {
+        errorMessage = "Invalid email or password. Please try again.";
+      } else if (errorMessage.includes("Email not confirmed")) {
+        errorMessage = "Please verify your email before logging in.";
+      }
+      
+      toast.error(errorMessage);
       throw error;
     } finally {
       setIsLoading(false);
+    }
+  };
+  
+  const loginWithProvider = async (provider: Provider) => {
+    try {
+      const { data, error } = await signInWithProvider(provider);
+      
+      if (error) {
+        throw error;
+      }
+      
+      // Note: Toast will be shown by the auth state change handler
+    } catch (error: any) {
+      toast.error(error.message || "Social login failed");
+      throw error;
     }
   };
 
@@ -139,7 +232,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw error;
       }
       
-      toast.success("Account created successfully.");
+      // Check if email confirmation is required
+      if (data?.user && !data.user.email_confirmed_at) {
+        toast.success("Please check your email to verify your account.");
+      } else {
+        toast.success("Account created successfully.");
+      }
     } catch (error: any) {
       console.error('Registration error (detailed):', error);
       toast.error(error.message || "Registration failed");
@@ -153,9 +251,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     try {
       await signOut();
-      toast.success("Logged out successfully");
+      // Toast will be shown by the auth state change handler
     } catch (error: any) {
       toast.error(error.message || "Logout failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const sendPasswordResetEmail = async (email: string) => {
+    setIsLoading(true);
+    try {
+      const { error } = await resetPassword(email);
+      
+      if (error) {
+        throw error;
+      }
+      
+      toast.success("Password reset email sent. Please check your inbox.");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to send reset email");
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const changePassword = async (newPassword: string) => {
+    setIsLoading(true);
+    try {
+      const { error } = await updatePassword(newPassword);
+      
+      if (error) {
+        throw error;
+      }
+      
+      toast.success("Password updated successfully");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to update password");
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -168,9 +302,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isLoading,
     isAuthenticated: !!user,
     hasSubscription,
+    emailVerified,
     login,
+    loginWithProvider,
     register,
-    logout
+    logout,
+    sendPasswordResetEmail,
+    changePassword
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -5,10 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
 import { pricingPlans, features } from "@/data/pricing";
 import AuthModals from "@/components/AuthModals";
+import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
 
 const PricingSection = () => {
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   const handleGetMembership = () => {
     setIsSignupOpen(true);
@@ -60,13 +63,24 @@ const PricingSection = () => {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button 
-                  className="w-full" 
-                  variant={plan.badge === "Most Popular" ? "default" : "outline"}
-                  onClick={handleGetMembership}
-                >
-                  Get Membership
-                </Button>
+                {isAuthenticated ? (
+                  <Link to="/dashboard/subscription" className="w-full">
+                    <Button 
+                      className="w-full" 
+                      variant={plan.badge === "Most Popular" ? "default" : "outline"}
+                    >
+                      Go to Dashboard
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button 
+                    className="w-full" 
+                    variant={plan.badge === "Most Popular" ? "default" : "outline"}
+                    onClick={handleGetMembership}
+                  >
+                    Get Membership
+                  </Button>
+                )}
               </CardFooter>
             </Card>
           ))}
